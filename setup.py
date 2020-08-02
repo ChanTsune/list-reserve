@@ -13,5 +13,9 @@ setup(name='list_reserve',
       long_description_content_type="text/markdown",
       ext_modules=[
         Extension('list_reserve', ['src/list_reserve.c'])],
-      
+      url='https://github.com/ChanTsune/list_reserve',
+      author='ChanTsune',
+      author_email='yshegou@gmail.com',
+      license='MIT',
+      keywords='list extension memory reserve capacity',
       )
