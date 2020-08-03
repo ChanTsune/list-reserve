@@ -41,7 +41,7 @@ list_reserve(PyObject *self, PyObject* args) {
     if (_list_reserve(list, size) < 0) {
         return NULL;
     }
-    return Py_None;
+    Py_RETURN_NONE;
 }
 
 static PyObject *
