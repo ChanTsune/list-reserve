@@ -3,13 +3,13 @@
 
 
 static int
-list_reserve_impl(PyListObject *self, Py_ssize_t newsize) {
+list_realloc(PyListObject *self, Py_ssize_t newsize) {
     PyObject **items;
     size_t num_allocated_bytes;
-    Py_ssize_t allocated = self->allocated;
-
-    if (allocated >= newsize && newsize >= (allocated >> 1)) {
-        assert(self->ob_item != NULL || newsize == 0);
+    if (newsize <= 0) {
+        PyMem_FREE(self->ob_item);
+        self->ob_item = NULL;
+        self->allocated = 0;
         return 0;
     }
 
@@ -22,6 +22,14 @@ list_reserve_impl(PyListObject *self, Py_ssize_t newsize) {
     self->ob_item = items;
     self->allocated = newsize;
     return 0;
+}
+
+static int
+list_reserve_impl(PyListObject *self, Py_ssize_t newsize) {
+    Py_ssize_t allocated = self->allocated;
+    if (allocated >= newsize)
+        return 0;
+    return list_realloc(self, newsize);
 }
 
 static PyObject *
