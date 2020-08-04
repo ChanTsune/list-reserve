@@ -3,8 +3,7 @@
 
 
 static int
-_list_reserve(PyListObject *self, Py_ssize_t newsize)
-{
+list_reserve_impl(PyListObject *self, Py_ssize_t newsize) {
     PyObject **items;
     size_t num_allocated_bytes;
     Py_ssize_t allocated = self->allocated;
@@ -38,7 +37,7 @@ list_reserve(PyObject *self, PyObject* args) {
         return NULL;
     }
     PyListObject* list = (PyListObject*)o;
-    if (_list_reserve(list, size) < 0) {
+    if (list_reserve_impl(list, size) < 0) {
         return NULL;
     }
     Py_RETURN_NONE;
