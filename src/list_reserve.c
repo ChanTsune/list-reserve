@@ -25,11 +25,37 @@ list_realloc(PyListObject *self, Py_ssize_t newsize) {
 }
 
 static int
+list_shrink_to_fit_impl(PyListObject *self) {
+    Py_ssize_t size = PyList_GET_SIZE(self);
+    if (size == self->allocated)
+        return 0;
+    return list_realloc(self, size);
+}
+
+static int
 list_reserve_impl(PyListObject *self, Py_ssize_t newsize) {
     Py_ssize_t allocated = self->allocated;
     if (allocated >= newsize)
         return 0;
     return list_realloc(self, newsize);
+}
+
+static PyObject *
+list_shrink_to_fit(PyObject *self, PyObject* args) {
+    PyObject* o;
+
+    if (!PyArg_ParseTuple(args, "O", &o)) {
+        return NULL;
+    }
+    if (!PyList_Check(o)) {
+        PyErr_SetString(PyExc_TypeError, "shrink_to_fit excepted list object.");
+        return NULL;
+    }
+    PyListObject* list = (PyListObject*)o;
+    if (list_shrink_to_fit_impl(list) < 0) {
+        return NULL;
+    }
+    Py_RETURN_NONE;
 }
 
 static PyObject *
@@ -74,6 +100,7 @@ list_capacity(PyObject *self, PyObject *args) {
 static PyMethodDef methods[] = {
     {"reserve", list_reserve, METH_VARARGS, "reserve list capacity"},
     {"capacity", list_capacity, METH_VARARGS, "return list capacity"},
+    {"shrink_to_fit", list_shrink_to_fit, METH_VARARGS, "shrink to fit list capacity"},
     {NULL}};
 
 // module definition struct
