@@ -18,12 +18,13 @@ class ListReserveTest(TestCase):
 
     def test_reserve(self):
         from list_reserve import capacity, reserve
+        l = [1, 2, 3]
         cases = [
             ([], 100, 100), # (list, reserve, excepted)
             ([], 0, 0),
             ([], -1, 0),
-            ([1, 2, 3], 1, 3),
-            ([1, 2, 3], -10, 3),
+            (l, 1, capacity(l)),
+            (l, -10, capacity(l)),
         ]
         for l, size, excepted in cases:
             reserve(l, size)
