@@ -2,7 +2,10 @@
 
 Python builtin list memory allocation library.  
 
-[![Build Status](https://travis-ci.org/ChanTsune/list-reserve.svg?branch=master)](https://travis-ci.org/ChanTsune/list-reserve)  
+[![PyPI - License](https://img.shields.io/pypi/l/list_reserve)](https://pypi.org/project/list-reserve/)
+[![Build Status](https://travis-ci.org/ChanTsune/list-reserve.svg?branch=master)](https://travis-ci.org/ChanTsune/list-reserve)
+[![PyPI](https://img.shields.io/pypi/v/list_reserve)](https://pypi.org/project/list-reserve/)
+[![Downloads](https://pepy.tech/badge/list-reserve)](https://pepy.tech/project/list-reserve)
 
 ## Getting it
 
@@ -35,3 +38,24 @@ print(len(l)) # 0
 
 print(capacity(l)) # 10
 ```
+
+### shrink_to_fit
+
+*since 0.1.0*
+shrink to fit list capacity.
+
+```py
+from list_reserve import capacity, shrink_to_fit
+
+l = list(range(100))
+
+print(capacity(l)) # 118
+
+shrink_to_fit(l)
+
+print(capacity(l)) # 100
+```
+
+## License
+
+[MIT License](./LICENSE)
