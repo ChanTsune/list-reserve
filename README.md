@@ -41,7 +41,7 @@ print(capacity(l)) # 10
 
 ### shrink_to_fit
 
-*since 0.1.0*
+*since 0.1.0*  
 shrink to fit list capacity.
 
 ```py
