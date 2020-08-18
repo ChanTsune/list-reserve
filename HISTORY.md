@@ -2,6 +2,11 @@
 
 ## Versions
 
+### 0.1.0
+
+- Added  
+  - `shrink_to_fit`(#3)
+
 ### 0.0.1
 
 - Fixed  
