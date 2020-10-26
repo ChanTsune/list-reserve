@@ -48,7 +48,7 @@ list_shrink_to_fit(PyObject *self, PyObject* args) {
         return NULL;
     }
     if (!PyList_Check(o)) {
-        PyErr_SetString(PyExc_TypeError, "shrink_to_fit excepted list object.");
+        PyErr_SetString(PyExc_TypeError, "'shrink_to_fit' expected list object.");
         return NULL;
     }
     PyListObject* list = (PyListObject*)o;
@@ -67,7 +67,7 @@ list_reserve(PyObject *self, PyObject* args) {
         return NULL;
     }
     if (!PyList_Check(o)) {
-        PyErr_SetString(PyExc_TypeError, "capacity excepted list object.");
+        PyErr_SetString(PyExc_TypeError, "'reserve' excepted list object.");
         return NULL;
     }
     PyListObject* list = (PyListObject*)o;
@@ -84,7 +84,7 @@ list_capacity(PyObject *self, PyObject *args) {
         return NULL;
     }
     if (!PyList_Check(o)) {
-        PyErr_SetString(PyExc_TypeError, "capacity excepted list object.");
+        PyErr_SetString(PyExc_TypeError, "'capacity' expected list object.");
         return NULL;
     }
     PyListObject* list = (PyListObject*)o;
