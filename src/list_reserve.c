@@ -98,9 +98,9 @@ list_capacity(PyObject *self, PyObject *args) {
 
 
 static PyMethodDef methods[] = {
-    {"reserve", list_reserve, METH_VARARGS, "reserve list capacity"},
-    {"capacity", list_capacity, METH_VARARGS, "return list capacity"},
-    {"shrink_to_fit", list_shrink_to_fit, METH_VARARGS, "shrink to fit list capacity"},
+    {"reserve", list_reserve, METH_VARARGS, "Reserve list capacity."},
+    {"capacity", list_capacity, METH_VARARGS, "Return list capacity."},
+    {"shrink_to_fit", list_shrink_to_fit, METH_VARARGS, "Shrink to fit list capacity."},
     {NULL}};
 
 // module definition struct
