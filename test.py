@@ -1,7 +1,12 @@
+from sys import maxsize
 from unittest import TestCase
 
 
 class ListReserveTest(TestCase):
+
+    @property
+    def _pointer_size(self):
+        return 8 if maxsize > 2 ** 32 else 4
 
     def test_capacity(self):
         from list_reserve import capacity
@@ -58,3 +63,16 @@ class ListReserveTest(TestCase):
 
         with self.assertRaises(TypeError):
             shrink_to_fit(1)
+
+    def test_capacity_bytes(self):
+        from list_reserve import capacity_bytes
+
+        self.assertEqual(capacity_bytes([]), 0 * self._pointer_size)
+        self.assertEqual(capacity_bytes([1]), 1 * self._pointer_size)
+
+
+    def test_capacity_error_bytes(self):
+        from list_reserve import capacity_bytes
+
+        with self.assertRaises(TypeError):
+            capacity_bytes(1)
