@@ -16,6 +16,7 @@ jobs:
         - '3.7.x'
         - '3.8.x'
         - '3.9.x'
+        - '3.10.0-alpha - 3.10.x'
         os:
           - ubuntu-latest
           - macos-latest
