@@ -2,6 +2,11 @@
 
 ## Versions
 
+### 0.3.0
+
+- Added
+  - `allocated_bytes` ... Return list allocated memory size function
+
 ### 0.2.0
 
 - Added
