@@ -1,6 +1,7 @@
 import os
 from setuptools import setup, Extension
 
+
 def read(fname):
     with open(os.path.join(os.path.dirname(__file__), fname)) as f:
         return f.read()
@@ -14,7 +15,8 @@ setup(name="list_reserve",
       packages=["list_reserve"],
       package_data={"list_reserve": ["py.typed", "__init__.pyi"]},
       ext_modules=[
-        Extension("list_reserve", ["src/list_reserve.c"])],
+          Extension("list_reserve", ["src/list_reserve.c"])
+      ],
       url="https://github.com/ChanTsune/list-reserve",
       author="ChanTsune",
       author_email="yshegou@gmail.com",
