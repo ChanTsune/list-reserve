@@ -65,14 +65,14 @@ class ListReserveTest(TestCase):
             shrink_to_fit(1)
 
     def test_capacity_bytes(self):
-        from list_reserve import capacity_bytes
+        from list_reserve import allocated_bytes
 
-        self.assertEqual(capacity_bytes([]), 0 * self._pointer_size)
-        self.assertEqual(capacity_bytes([1]), 1 * self._pointer_size)
+        self.assertEqual(allocated_bytes([]), 0 * self._pointer_size)
+        self.assertEqual(allocated_bytes([1]), 1 * self._pointer_size)
 
 
     def test_capacity_error_bytes(self):
-        from list_reserve import capacity_bytes
+        from list_reserve import allocated_bytes
 
         with self.assertRaises(TypeError):
-            capacity_bytes(1)
+            allocated_bytes(1)
