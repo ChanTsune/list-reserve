@@ -4,8 +4,14 @@
 
 ### 0.2.0
 
-- Add
+- Added
   - Support type hint
+
+### 0.1.1
+
+- Updated
+  - Some docstrings
+  - Some error messages
 
 ### 0.1.0
 
