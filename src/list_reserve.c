@@ -97,7 +97,7 @@ list_capacity(PyObject *self, PyObject *args) {
 }
 
 static PyObject *
-list_capacity_bytes(PyObject *self, PyObject *args) {
+list_allocated_bytes(PyObject *self, PyObject *args) {
     PyObject* o;
     if (!PyArg_ParseTuple(args, "O", &o)){
         return NULL;
@@ -118,7 +118,7 @@ list_capacity_bytes(PyObject *self, PyObject *args) {
 static PyMethodDef methods[] = {
     {"reserve", list_reserve, METH_VARARGS, "Reserve list capacity."},
     {"capacity", list_capacity, METH_VARARGS, "Return list capacity."},
-    {"capacity_bytes", list_capacity_bytes, METH_VARARGS, "Return list allocated bytes."},
+    {"allocated_bytes", list_allocated_bytes, METH_VARARGS, "Return list allocated memory size."},
     {"shrink_to_fit", list_shrink_to_fit, METH_VARARGS, "Shrink to fit list capacity."},
     {NULL}};
 
