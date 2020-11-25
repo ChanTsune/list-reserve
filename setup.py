@@ -8,7 +8,7 @@ def read(fname):
 
 
 setup(name="list_reserve",
-      version="0.2.0",
+      version="0.3.0",
       description="Python builtin list memory allocation library",
       long_description=read("README.md"),
       long_description_content_type="text/markdown",
