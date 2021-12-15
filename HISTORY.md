@@ -2,6 +2,11 @@
 
 ## Versions
 
+### 0.3.1
+
+- Added
+  - Python 3.10 support
+
 ### 0.3.0
 
 - Added
