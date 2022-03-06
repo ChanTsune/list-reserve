@@ -88,8 +88,8 @@ list_capacity(PyObject *self, PyObject *args) {
         return NULL;
     }
     PyListObject* list = (PyListObject*)o;
-    long allocated = list->allocated;
-    PyObject* capacity = PyLong_FromLong(allocated);
+    Py_ssize_t allocated = list->allocated;
+    PyObject* capacity = PyLong_FromSsize_t(allocated);
     if (capacity == NULL) {
         return NULL;
     }
