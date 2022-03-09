@@ -107,8 +107,8 @@ list_allocated_bytes(PyObject *self, PyObject *args) {
         return NULL;
     }
     PyListObject* list = (PyListObject*)o;
-    long allocated_bytes = list->allocated * sizeof(PyListObject*);
-    PyObject* capacity = PyLong_FromLong(allocated_bytes);
+    Py_ssize_t allocated_bytes = list->allocated * sizeof(PyListObject*);
+    PyObject* capacity = PyLong_FromSsize_t(allocated_bytes);
     if (capacity == NULL) {
         return NULL;
     }
