@@ -1,4 +1,4 @@
-name: Test
+name: Test Wheel
 
 on:
   push:
@@ -32,7 +32,7 @@ jobs:
 
     - name: Build package
       run: |
-        python setup.py sdist wheel
+        python setup.py sdist bdist_wheel
 
     - name: upload temporary
       id: upload_temporary
