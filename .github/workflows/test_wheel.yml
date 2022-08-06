@@ -21,7 +21,7 @@ jobs:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
   build:
     needs: release
-    if: ${{ jobs.release.steps.create_release.outputs.created == 'true' }}
+    if: ${{ needs.jobs.release.steps.create_release.outputs.created == 'true' }}
     strategy:
       matrix:
         python-version:
@@ -60,7 +60,7 @@ jobs:
 
   publish:
     needs: build
-    if: ${{ jobs.release.steps.create_release.outputs.created == 'true' }}
+    if: ${{ needs.jobs.release.steps.create_release.outputs.created == 'true' }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
