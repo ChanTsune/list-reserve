@@ -8,7 +8,6 @@ jobs:
     strategy:
       matrix:
         python-version:
-        - '3.5.x'
         - '3.6.x'
         - '3.7.x'
         - '3.8.x'
@@ -50,11 +49,6 @@ jobs:
     - name: download package
       uses: actions/cache@v3
       with:
-        key: ubuntu-latest-python-3.5.x-whell-${{ hashFiles('**/**') }}
-        path: dist/*
-    - name: download package
-      uses: actions/cache@v3
-      with:
         key: ubuntu-latest-python-3.6.x-whell-${{ hashFiles('**/**') }}
         path: dist/*
     - name: download package
@@ -76,11 +70,6 @@ jobs:
     - name: download package
       uses: actions/cache@v3
       with:
-        key: windows-latest-python-3.5.x-whell-${{ hashFiles('**/**') }}
-        path: dist/*
-    - name: download package
-      uses: actions/cache@v3
-      with:
         key: windows-latest-python-3.6.x-whell-${{ hashFiles('**/**') }}
         path: dist/*
     - name: download package
@@ -99,11 +88,6 @@ jobs:
         key: windows-latest-python-3.10.x-whell-${{ hashFiles('**/**') }}
         path: dist/*
     # macos
-    - name: download package
-      uses: actions/cache@v3
-      with:
-        key: macos-latest-python-3.5.x-whell-${{ hashFiles('**/**') }}
-        path: dist/*
     - name: download package
       uses: actions/cache@v3
       with:
