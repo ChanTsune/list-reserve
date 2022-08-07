@@ -20,12 +20,9 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-    outputs:
-      created: ${{ steps.create_release.outputs.created }}
-      tag_name: ${{ steps.create_release.outputs.tag_name }}
   build:
     needs: release
-    if: ${{ needs.release.outputs.created == 'true' }}
+    if: ${{ needs.jobs.release.steps.create_release.outputs.created == 'true' }}
     strategy:
       matrix:
         python-version:
@@ -58,15 +55,13 @@ jobs:
       id: upload_temporary
       uses: actions/cache@v3
       with:
-        key: ${{ matrix.os }}-python-${{ matrix.python-version }}-whell-${{ needs.release.outputs.tag_name }}
+        key: ${{ matrix.os }}-python-${{ matrix.python-version }}-whell-${{ needs.jobs.release.steps.create_release.outputs.tag_name }}
         path: |
           dist/*
 
   publish:
-    needs: 
-      - build
-      - release
-    if: ${{ needs.release.outputs.created == 'true' }}
+    needs: build
+    if: ${{ needs.jobs.release.steps.create_release.outputs.created == 'true' }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -74,64 +69,64 @@ jobs:
     - name: download package
       uses: actions/cache@v3
       with:
-        key: ubuntu-latest-python-3.6.x-whell-${{ needs.release.outputs.tag_name }}
+        key: ubuntu-latest-python-3.6.x-whell-${{ needs.jobs.release.steps.create_release.outputs.tag_name }}
         path: dist/*
     - name: download package
       uses: actions/cache@v3
       with:
-        key: ubuntu-latest-python-3.7.x-whell-${{ needs.release.outputs.tag_name }}
+        key: ubuntu-latest-python-3.7.x-whell-${{ needs.jobs.release.steps.create_release.outputs.tag_name }}
         path: dist/*
     - name: download package
       uses: actions/cache@v3
       with:
-        key: ubuntu-latest-python-3.9.x-whell-${{ needs.release.outputs.tag_name }}
+        key: ubuntu-latest-python-3.9.x-whell-${{ needs.jobs.release.steps.create_release.outputs.tag_name }}
         path: dist/*
     - name: download package
       uses: actions/cache@v3
       with:
-        key: ubuntu-latest-python-3.10.x-whell-${{ needs.release.outputs.tag_name }}
+        key: ubuntu-latest-python-3.10.x-whell-${{ needs.jobs.release.steps.create_release.outputs.tag_name }}
         path: dist/*
     # windows
     - name: download package
       uses: actions/cache@v3
       with:
-        key: windows-latest-python-3.6.x-whell-${{ needs.release.outputs.tag_name }}
+        key: windows-latest-python-3.6.x-whell-${{ needs.jobs.release.steps.create_release.outputs.tag_name }}
         path: dist/*
     - name: download package
       uses: actions/cache@v3
       with:
-        key: windows-latest-python-3.7.x-whell-${{ needs.release.outputs.tag_name }}
+        key: windows-latest-python-3.7.x-whell-${{ needs.jobs.release.steps.create_release.outputs.tag_name }}
         path: dist/*
     - name: download package
       uses: actions/cache@v3
       with:
-        key: windows-latest-python-3.9.x-whell-${{ needs.release.outputs.tag_name }}
+        key: windows-latest-python-3.9.x-whell-${{ needs.jobs.release.steps.create_release.outputs.tag_name }}
         path: dist/*
     - name: download package
       uses: actions/cache@v3
       with:
-        key: windows-latest-python-3.10.x-whell-${{ needs.release.outputs.tag_name }}
+        key: windows-latest-python-3.10.x-whell-${{ needs.jobs.release.steps.create_release.outputs.tag_name }}
         path: dist/*
     # macos
     - name: download package
       uses: actions/cache@v3
       with:
-        key: macos-latest-python-3.6.x-whell-${{ needs.release.outputs.tag_name }}
+        key: macos-latest-python-3.6.x-whell-${{ needs.jobs.release.steps.create_release.outputs.tag_name }}
         path: dist/*
     - name: download package
       uses: actions/cache@v3
       with:
-        key: macos-latest-python-3.7.x-whell-${{ needs.release.outputs.tag_name }}
+        key: macos-latest-python-3.7.x-whell-${{ needs.jobs.release.steps.create_release.outputs.tag_name }}
         path: dist/*
     - name: download package
       uses: actions/cache@v3
       with:
-        key: macos-latest-python-3.9.x-whell-${{ needs.release.outputs.tag_name }}
+        key: macos-latest-python-3.9.x-whell-${{ needs.jobs.release.steps.create_release.outputs.tag_name }}
         path: dist/*
     - name: download package
       uses: actions/cache@v3
       with:
-        key: macos-latest-python-3.10.x-whell-${{ needs.release.outputs.tag_name }}
+        key: macos-latest-python-3.10.x-whell-${{ needs.jobs.release.steps.create_release.outputs.tag_name }}
         path: dist/*
 
     - name: Set up Python
