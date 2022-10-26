@@ -9,7 +9,7 @@ def read(fname):
 
 setup(name="list_reserve",
       version="0.3.1",
-      description="Python builtin list memory allocation library",
+      description="Memory allocation library for Python builtin list",
       long_description=read("README.md"),
       long_description_content_type="text/markdown",
       packages=["list_reserve"],
