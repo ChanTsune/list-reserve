@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  builder:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - "./:/list_reserve"
+    working_dir: /list_reserve
+    command: python -m build
