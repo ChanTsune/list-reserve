@@ -1,0 +1,29 @@
+{
+  // Dev Container for developing the list_reserve C extension.
+  // Docs: https://containers.dev
+  "name": "list-reserve",
+
+  // Debian-based image that already ships gcc/make, so the C extension
+  // compiles without extra features.
+  "image": "mcr.microsoft.com/devcontainers/python:3.14",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-vscode.cpptools"
+      ],
+      "settings": {
+        // Discover the root-level test.py from the Test Explorer.
+        "python.testing.unittestEnabled": true,
+        "python.testing.unittestArgs": ["-v", "-s", ".", "-p", "test*.py"]
+      }
+    }
+  },
+
+  // Compile + install the extension (non-editable: a clean .so in site-packages
+  // avoids the name clash with the list_reserve/ stub package) and add the
+  // `build` frontend so `python -m build` works.
+  "postCreateCommand": "pip install --upgrade pip && pip install . build"
+}
