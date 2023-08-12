@@ -56,6 +56,21 @@ shrink_to_fit(l)
 print(capacity(l)) # 100
 ```
 
+## Development
+
+This repository ships a [Dev Container](https://containers.dev). Open it in an editor that
+supports Dev Containers ("Reopen in Container"), or run it headlessly with the
+[Dev Containers CLI](https://github.com/devcontainers/cli):
+
+```bash
+devcontainer up --workspace-folder .
+devcontainer exec --workspace-folder . python -m unittest
+```
+
+The container compiles the C extension on creation, so the tests are runnable immediately.
+Since `list_reserve` is a C extension, re-run `pip install .` after editing
+`src/list_reserve.c`.
+
 ## License
 
 [MIT License](./LICENSE)
