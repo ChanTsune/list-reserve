@@ -5,7 +5,17 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+      target: builder
     volumes:
       - "./:/list_reserve"
     working_dir: /list_reserve
     command: python -m build
+  test:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: test
+    volumes:
+      - "./:/list_reserve"
+    working_dir: /list_reserve
+    command: sh -c 'pip install . && python -m unittest'
