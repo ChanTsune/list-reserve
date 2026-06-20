@@ -18,20 +18,39 @@ readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [{ name = "ChanTsune", email = "yshegou@gmail.com" }]
-keywords = ["list", "extension", "memory", "reserve", "capacity"]
+keywords = [
+    "list",
+    "reserve",
+    "capacity",
+    "memory",
+    "cpython",
+    "c-extension",
+]
 requires-python = ">=3.10"
 classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: C",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
 [project.urls]
 Homepage = "https://github.com/ChanTsune/list-reserve"
+Repository = "https://github.com/ChanTsune/list-reserve"
+Issues = "https://github.com/ChanTsune/list-reserve/issues"
+Changelog = "https://github.com/ChanTsune/list-reserve/blob/master/CHANGELOG.md"
 
 # Explicit package list: with [project] present, setuptools enables automatic
 # discovery, which would trip over the src/ directory. Declare the stub package
