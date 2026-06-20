@@ -84,14 +84,14 @@ build = "cp310-* cp311-* cp312-* cp313-* cp314-*"
 #   internals.
 skip = "pp* *t-*"
 
-# Run the repo-root unittest suite against each freshly installed wheel.
-# cibuildwheel runs this from a temp dir with the wheel installed, so
-# `import list_reserve` binds to the installed .so. {project} only tells
-# unittest where to FIND test.py; cwd stays in the temp dir, so the
-# list_reserve/ stub directory at the repo root never shadows the installed
-# extension module. Do not rewrite as `cd {project} && ...` — that would put
-# the stub dir at the front of import resolution and shadow the .so.
-test-command = "python -m unittest discover -s {project} -p test.py"
+# cibuildwheel runs this against each installed wheel from a temp dir, so it
+# tests the installed .so. `-s {project}` makes {project} the discovery
+# top-level dir, so tests import as `tests.*` and `from tests._support import
+# ...` resolves; `-s {project}/tests` would drop the `tests.` prefix and break
+# that import. Quote the glob with double quotes (honored by both POSIX sh and
+# Windows cmd; single quotes reach unittest literally on Windows and match
+# nothing) so unittest, not the shell, expands it.
+test-command = "python -m unittest discover -s {project} -p \"test_*.py\""
 
 # Windows ARM64 is experimental and its tests cannot run on the build host, so
 # skip them (the wheel is still built and shipped).
