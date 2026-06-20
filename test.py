@@ -20,15 +20,26 @@ class ListReserveTest(TestCase):
 
         lst = [1, 2, 3]
         cases = [
-            ([], 100, 100),  # (list, reserve, excepted)
+            ([], 100, 100),  # (list, reserve, expected)
+            ([1, 2, 3], 100, 100),  # grow a populated list (realloc copies live items)
             ([], 0, 0),
             ([], -1, 0),
             (lst, 1, capacity(lst)),
             (lst, -10, capacity(lst)),
         ]
-        for lst, size, excepted in cases:
+        for lst, size, expected in cases:
+            original = list(lst)
+            original_len = len(lst)
             reserve(lst, size)
-            self.assertEqual(capacity(lst), excepted)
+            self.assertEqual(capacity(lst), expected)
+            self.assertEqual(lst, original)
+            self.assertEqual(len(lst), original_len)
+
+    def test_reserve_too_large_error(self):
+        from list_reserve import reserve
+
+        with self.assertRaises(MemoryError):
+            reserve([], maxsize)
 
     def test_reserve_error(self):
         from list_reserve import reserve
@@ -41,16 +52,24 @@ class ListReserveTest(TestCase):
 
         lst = []
         lst.append(1)
+        original = list(lst)
+        original_len = len(lst)
         shrink_to_fit(lst)
 
         self.assertEqual(capacity(lst), len(lst))
+        self.assertEqual(lst, original)
+        self.assertEqual(len(lst), original_len)
 
     def test_shrink_to_fit_no_action(self):
         from list_reserve import capacity, shrink_to_fit
 
         lst = [1, 2, 3, 4]
+        original = list(lst)
+        original_len = len(lst)
         shrink_to_fit(lst)
         self.assertEqual(capacity(lst), len(lst))
+        self.assertEqual(lst, original)
+        self.assertEqual(len(lst), original_len)
 
     def test_shrink_to_fit_error(self):
         from list_reserve import shrink_to_fit
@@ -65,10 +84,15 @@ class AllocatedBytesTest(TestCase):
         return 8 if maxsize > 2**32 else 4
 
     def test_allocated_bytes(self):
-        from list_reserve import allocated_bytes
+        from list_reserve import allocated_bytes, capacity
 
-        self.assertEqual(allocated_bytes([]), 0 * self._pointer_size)
-        self.assertEqual(allocated_bytes([1]), 1 * self._pointer_size)
+        empty = []
+        one_item = [1]
+
+        self.assertEqual(allocated_bytes(empty), capacity(empty) * self._pointer_size)
+        self.assertEqual(
+            allocated_bytes(one_item), capacity(one_item) * self._pointer_size
+        )
 
     def test_allocated_bytes_error(self):
         from list_reserve import allocated_bytes
