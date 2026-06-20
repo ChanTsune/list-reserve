@@ -49,7 +49,7 @@ class StatsTest(TestCase):
     def test_stats_after_reserve(self):
         from list_reserve import reserve, stats
 
-        lst = []
+        lst: list[int] = []
         reserve(lst, 100)
         s = stats(lst)
         self.assertEqual(s["length"], 0)
@@ -83,4 +83,4 @@ class StatsTest(TestCase):
         from list_reserve import stats
 
         with self.assertRaises(TypeError):
-            stats(1)
+            stats(1)  # type: ignore[arg-type]

@@ -70,6 +70,12 @@ line-length = 88
 # UP: pyupgrade (py310 baseline), RUF: Ruff-specific. Not "ALL" by design.
 select = ["E", "F", "I", "B", "UP", "RUF"]
 
+[tool.mypy]
+# check_untyped_defs makes mypy inspect the untyped test-method bodies it skips by
+# default; without it `mypy tests` would be a no-op.
+python_version = "3.10"
+check_untyped_defs = true
+
 [tool.cibuildwheel]
 # CPython only, 3.10 through 3.14. PyPy (pp*), GraalPy (gp*), free-threaded
 # (cp3??t-*) and any future minor are excluded by not matching this list.

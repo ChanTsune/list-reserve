@@ -1,0 +1,46 @@
+name: typecheck
+
+on:
+  push:
+    paths:
+      - "**.py"
+      - "**.pyi"
+      - "src/**"
+      - "pyproject.toml"
+      - ".github/workflows/typecheck.yml"
+  # No path filter on pull_request (matching lint.yml): an unconditional run avoids
+  # a path-filtered job hanging a required status check under branch protection.
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: typecheck-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+jobs:
+  mypy:
+    name: mypy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
+        with:
+          python-version: "3.x"
+      # Pin mypy (like ruff/clang-format in lint.yml) for reproducible results.
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install . mypy==2.1.0
+      - name: mypy
+        run: mypy tests

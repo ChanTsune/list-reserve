@@ -7,7 +7,7 @@ class AllocatedBytesTest(TestCase):
     def test_allocated_bytes(self):
         from list_reserve import allocated_bytes, capacity
 
-        empty = []
+        empty: list[int] = []
         one_item = [1]
 
         self.assertEqual(allocated_bytes(empty), capacity(empty) * POINTER_SIZE)
@@ -17,4 +17,4 @@ class AllocatedBytesTest(TestCase):
         from list_reserve import allocated_bytes
 
         with self.assertRaises(TypeError):
-            allocated_bytes(1)
+            allocated_bytes(1)  # type: ignore[arg-type]
