@@ -1,0 +1,9 @@
+BasedOnStyle: LLVM
+IndentWidth: 4
+ColumnLimit: 88
+AlignAfterOpenBracket: Align
+# Keep CPython's idiom of placing the return type and the function name on
+# separate lines, and never collapse a function body onto one line.
+AllowShortFunctionsOnASingleLine: None
+BreakAfterReturnType: TopLevelDefinitions
+PointerAlignment: Right

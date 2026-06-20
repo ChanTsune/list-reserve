@@ -1,7 +1,6 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
-
 static int
 list_realloc(PyListObject *self, Py_ssize_t newsize) {
     PyObject **items;
@@ -41,8 +40,8 @@ list_reserve_impl(PyListObject *self, Py_ssize_t newsize) {
 }
 
 static PyObject *
-list_shrink_to_fit(PyObject *self, PyObject* args) {
-    PyObject* o;
+list_shrink_to_fit(PyObject *self, PyObject *args) {
+    PyObject *o;
 
     if (!PyArg_ParseTuple(args, "O", &o)) {
         return NULL;
@@ -51,7 +50,7 @@ list_shrink_to_fit(PyObject *self, PyObject* args) {
         PyErr_SetString(PyExc_TypeError, "'shrink_to_fit' expected list object.");
         return NULL;
     }
-    PyListObject* list = (PyListObject*)o;
+    PyListObject *list = (PyListObject *)o;
     if (list_shrink_to_fit_impl(list) < 0) {
         return NULL;
     }
@@ -59,18 +58,18 @@ list_shrink_to_fit(PyObject *self, PyObject* args) {
 }
 
 static PyObject *
-list_reserve(PyObject *self, PyObject* args) {
+list_reserve(PyObject *self, PyObject *args) {
     Py_ssize_t size;
-    PyObject* o;
+    PyObject *o;
 
-    if (!PyArg_ParseTuple(args, "On", &o, &size)){
+    if (!PyArg_ParseTuple(args, "On", &o, &size)) {
         return NULL;
     }
     if (!PyList_Check(o)) {
         PyErr_SetString(PyExc_TypeError, "'reserve' excepted list object.");
         return NULL;
     }
-    PyListObject* list = (PyListObject*)o;
+    PyListObject *list = (PyListObject *)o;
     if (list_reserve_impl(list, size) < 0) {
         return NULL;
     }
@@ -79,17 +78,17 @@ list_reserve(PyObject *self, PyObject* args) {
 
 static PyObject *
 list_capacity(PyObject *self, PyObject *args) {
-    PyObject* o;
-    if (!PyArg_ParseTuple(args, "O", &o)){
+    PyObject *o;
+    if (!PyArg_ParseTuple(args, "O", &o)) {
         return NULL;
     }
     if (!PyList_Check(o)) {
         PyErr_SetString(PyExc_TypeError, "'capacity' expected list object.");
         return NULL;
     }
-    PyListObject* list = (PyListObject*)o;
+    PyListObject *list = (PyListObject *)o;
     Py_ssize_t allocated = list->allocated;
-    PyObject* capacity = PyLong_FromSsize_t(allocated);
+    PyObject *capacity = PyLong_FromSsize_t(allocated);
     if (capacity == NULL) {
         return NULL;
     }
@@ -98,17 +97,17 @@ list_capacity(PyObject *self, PyObject *args) {
 
 static PyObject *
 list_allocated_bytes(PyObject *self, PyObject *args) {
-    PyObject* o;
-    if (!PyArg_ParseTuple(args, "O", &o)){
+    PyObject *o;
+    if (!PyArg_ParseTuple(args, "O", &o)) {
         return NULL;
     }
     if (!PyList_Check(o)) {
         PyErr_SetString(PyExc_TypeError, "'capacity_byte' expected list object.");
         return NULL;
     }
-    PyListObject* list = (PyListObject*)o;
-    Py_ssize_t allocated_bytes = list->allocated * sizeof(PyListObject*);
-    PyObject* capacity = PyLong_FromSsize_t(allocated_bytes);
+    PyListObject *list = (PyListObject *)o;
+    Py_ssize_t allocated_bytes = list->allocated * sizeof(PyListObject *);
+    PyObject *capacity = PyLong_FromSsize_t(allocated_bytes);
     if (capacity == NULL) {
         return NULL;
     }
@@ -118,20 +117,17 @@ list_allocated_bytes(PyObject *self, PyObject *args) {
 static PyMethodDef methods[] = {
     {"reserve", list_reserve, METH_VARARGS, "Reserve list capacity."},
     {"capacity", list_capacity, METH_VARARGS, "Return list capacity."},
-    {"allocated_bytes", list_allocated_bytes, METH_VARARGS, "Return list allocated memory size."},
+    {"allocated_bytes", list_allocated_bytes, METH_VARARGS,
+     "Return list allocated memory size."},
     {"shrink_to_fit", list_shrink_to_fit, METH_VARARGS, "Shrink to fit list capacity."},
     {NULL}};
 
 // module definition struct
-static struct PyModuleDef module = {
-    PyModuleDef_HEAD_INIT,
-    "list_reserve",
-    "list memory allocation library",
-    -1,
-    methods};
+static struct PyModuleDef module = {PyModuleDef_HEAD_INIT, "list_reserve",
+                                    "list memory allocation library", -1, methods};
 
 // Initializes module
-PyMODINIT_FUNC PyInit_list_reserve(void)
-{
+PyMODINIT_FUNC
+PyInit_list_reserve(void) {
     return PyModule_Create(&module);
 }
