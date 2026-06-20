@@ -1,0 +1,119 @@
+name: Build & publish wheels
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+# Build jobs only read the repo; the publish job elevates to contents: write at
+# the job level to create the GitHub Release. PyPI auth is via TWINE secrets.
+permissions:
+  contents: read
+
+# Coalesce reruns of the same ref+event; never cancel an in-flight run (a release
+# push must finish creating the release and uploading).
+concurrency:
+  group: wheels-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: false
+
+jobs:
+  build_wheels:
+    name: Wheels ${{ matrix.archs }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Linux x86_64 (native) — builds manylinux + musllinux
+          - { os: ubuntu-latest,    archs: x86_64 }
+          # Linux aarch64 (native arm runner, no QEMU) — manylinux + musllinux
+          - { os: ubuntu-24.04-arm, archs: aarch64 }
+          - { os: windows-latest,   archs: AMD64 }
+          # Windows ARM64 (native build on windows-11-arm; tests skipped via
+          # test-skip — experimental target, cannot run on the build host).
+          # cibuildwheel builds cp39-cp314 win_arm64; no win_arm64 interpreter
+          # exists below 3.9, and cp38-win_arm64 is excluded by skip.
+          - { os: windows-11-arm,   archs: ARM64 }
+          # macOS Intel — macos-13 is decommissioned, use macos-15-intel
+          - { os: macos-15-intel,   archs: x86_64 }
+          - { os: macos-14,         archs: arm64 }
+    steps:
+      - uses: actions/checkout@v4
+      # Pin to v3.4.1: cibuildwheel v4.0.0 drops CPython 3.8. Do NOT accept a
+      # major bump (e.g. a Dependabot v4 PR) without first dropping the cp38
+      # target, or cp38 wheels stop building.
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v3.4.1
+        env:
+          CIBW_ARCHS: ${{ matrix.archs }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cibw-wheels-${{ matrix.os }}-${{ matrix.archs }}
+          path: ./wheelhouse/*.whl
+
+  make_sdist:
+    name: Build sdist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build sdist
+        run: pipx run build --sdist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cibw-sdist
+          path: dist/*.tar.gz
+
+  publish:
+    name: Release & publish to PyPI
+    needs: [build_wheels, make_sdist]
+    # Only on push to master (never on PR / workflow_dispatch). The
+    # release-with-commit step below is itself a no-op unless the head commit
+    # message matches "Release X.Y.Z", so ordinary master pushes build wheels but
+    # publish nothing.
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    # NO PAT REQUIRED. Release creation AND PyPI upload happen in THIS same run,
+    # so there is no cross-workflow release:published cascade — the default
+    # GITHUB_TOKEN (which does not start new workflow runs) is sufficient.
+    # contents: write is needed for release-with-commit to create the Release.
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      # Creates the GitHub Release + tag only when the head commit message
+      # matches the regexp; otherwise it is a no-op and 'created' is 'false'.
+      - name: Create GitHub Release on "Release X.Y.Z" commit
+        id: create_release
+        uses: ChanTsune/release-with-commit@b69c964230156ed249f2d503dbe0db5ee36529b9 # v3.0.0
+        with:
+          regexp: "Release (\\d+([.]\\d+)*)\n*((\\s|\\S)+)"
+          regexp_options: "us"
+          release_name: "version $1"
+          tag_name: "$1"
+          body: "$3"
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Download all wheels + sdist
+        if: ${{ steps.create_release.outputs.created == 'true' }}
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          pattern: cibw-*
+          merge-multiple: true
+      - name: Set up Python
+        if: ${{ steps.create_release.outputs.created == 'true' }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Publish to PyPI
+        if: ${{ steps.create_release.outputs.created == 'true' }}
+        env:
+          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        run: |
+          python -m pip install --upgrade twine
+          twine upload --non-interactive dist/*
