@@ -1,4 +1,4 @@
-from setuptools import setup, Extension
+from setuptools import Extension, setup
 
 # Project metadata is declared in pyproject.toml ([project]). setup.py only
 # carries the C extension definition, which setuptools' declarative

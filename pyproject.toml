@@ -42,6 +42,15 @@ packages = ["list_reserve"]
 [tool.setuptools.package-data]
 list_reserve = ["py.typed", "__init__.pyi"]
 
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+
+[tool.ruff.lint]
+# E/F: pycodestyle + pyflakes, I: import sorting, B: bugbear,
+# UP: pyupgrade (py310 baseline), RUF: Ruff-specific. Not "ALL" by design.
+select = ["E", "F", "I", "B", "UP", "RUF"]
+
 [tool.cibuildwheel]
 # CPython only, 3.10 through 3.14. PyPy (pp*), GraalPy (gp*), free-threaded
 # (cp3??t-*) and any future minor are excluded by not matching this list.

@@ -1,17 +1,13 @@
-from typing import Any, List
+from typing import Any
 
-
-def reserve(list: List[Any], capacity: int) -> None:
+def reserve(list: list[Any], capacity: int) -> None:
     """Reserve list capacity."""
 
-
-def capacity(list: List[Any]) -> int:
+def capacity(list: list[Any]) -> int:
     """Return list capacity."""
 
-
-def allocated_bytes(list: List[Any]) -> int:
+def allocated_bytes(list: list[Any]) -> int:
     """Return list allocated memory size."""
 
-
-def shrink_to_fit(list: List[Any]) -> None:
+def shrink_to_fit(list: list[Any]) -> None:
     """Shrink to fit list capacity."""

@@ -9,7 +9,6 @@ class ListReserveTest(TestCase):
         self.assertEqual(capacity([]), 0)
         self.assertEqual(capacity([1]), 1)
 
-
     def test_capacity_error(self):
         from list_reserve import capacity
 
@@ -18,17 +17,18 @@ class ListReserveTest(TestCase):
 
     def test_reserve(self):
         from list_reserve import capacity, reserve
-        l = [1, 2, 3]
+
+        lst = [1, 2, 3]
         cases = [
-            ([], 100, 100), # (list, reserve, excepted)
+            ([], 100, 100),  # (list, reserve, excepted)
             ([], 0, 0),
             ([], -1, 0),
-            (l, 1, capacity(l)),
-            (l, -10, capacity(l)),
+            (lst, 1, capacity(lst)),
+            (lst, -10, capacity(lst)),
         ]
-        for l, size, excepted in cases:
-            reserve(l, size)
-            self.assertEqual(capacity(l), excepted)
+        for lst, size, excepted in cases:
+            reserve(lst, size)
+            self.assertEqual(capacity(lst), excepted)
 
     def test_reserve_error(self):
         from list_reserve import reserve
@@ -37,21 +37,20 @@ class ListReserveTest(TestCase):
             reserve(1, 100)
 
     def test_shrink_to_fit(self):
-        from list_reserve import shrink_to_fit, capacity
+        from list_reserve import capacity, shrink_to_fit
 
-        l = []
-        l.append(1)
-        shrink_to_fit(l)
+        lst = []
+        lst.append(1)
+        shrink_to_fit(lst)
 
-        self.assertEqual(capacity(l), len(l))
+        self.assertEqual(capacity(lst), len(lst))
 
     def test_shrink_to_fit_no_action(self):
-        from list_reserve import shrink_to_fit, capacity
+        from list_reserve import capacity, shrink_to_fit
 
-        l = [1, 2, 3, 4]
-        shrink_to_fit(l)
-        self.assertEqual(capacity(l), len(l))
-
+        lst = [1, 2, 3, 4]
+        shrink_to_fit(lst)
+        self.assertEqual(capacity(lst), len(lst))
 
     def test_shrink_to_fit_error(self):
         from list_reserve import shrink_to_fit
