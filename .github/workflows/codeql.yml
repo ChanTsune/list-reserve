@@ -28,7 +28,7 @@ jobs:
           - language: actions
             build-mode: none
           - language: c-cpp
-            build-mode: autobuild
+            build-mode: manual
           - language: python
             build-mode: none
     steps:
@@ -42,6 +42,19 @@ jobs:
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
+
+      # Build the c-cpp database with an explicit build instead of autobuild:
+      # autobuild runs setup.py with the runner's old system setuptools (no PEP
+      # 517 isolation), which cannot parse the PEP 639 SPDX license. `pip install`
+      # builds with isolation (setuptools>=77) and CodeQL traces the compile.
+      - name: Set up Python
+        if: matrix.build-mode == 'manual'
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.x'
+      - name: Build the C extension
+        if: matrix.build-mode == 'manual'
+        run: pip install .
 
       - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v4
