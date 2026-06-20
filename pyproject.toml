@@ -84,3 +84,10 @@ manylinux-x86_64-image = "manylinux_2_28"
 manylinux-aarch64-image = "manylinux_2_28"
 musllinux-x86_64-image = "musllinux_1_2"
 musllinux-aarch64-image = "musllinux_1_2"
+
+# riscv64 has no manylinux_2_28 image (the baseline used above for x86_64 and
+# aarch64); manylinux_2_39 is the only manylinux image cibuildwheel provides
+# for riscv64. These two values match cibuildwheel's current riscv64 defaults;
+# pinning them documents the intent and guards against future default drift.
+manylinux-riscv64-image = "manylinux_2_39"
+musllinux-riscv64-image = "musllinux_1_2"

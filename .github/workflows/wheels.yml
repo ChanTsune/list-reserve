@@ -53,6 +53,40 @@ jobs:
           name: cibw-wheels-${{ matrix.os }}-${{ matrix.archs }}
           path: ./wheelhouse/*.whl
 
+  # riscv64 wheels build on a native RISC-V runner (RISE RISC-V Runners app).
+  # This is a separate job, not a matrix row, because the pypa/cibuildwheel
+  # action depends on actions/setup-python, which has no riscv64 build — so
+  # cibuildwheel is invoked manually here. The host is native riscv64, so no
+  # QEMU is needed; cibuildwheel runs the build inside the manylinux_2_39 /
+  # musllinux_1_2 riscv64 containers via the runner's Docker-in-Docker.
+  #
+  # continue-on-error keeps a riscv64 runner failure or queue timeout from
+  # blocking the release: publish lists this job in needs (so its wheels ship
+  # when it succeeds) but still runs and publishes every other wheel when it
+  # does not. The job shows as a non-fatal failure in the UI if riscv64 breaks.
+  build_wheels_riscv64:
+    name: Wheels riscv64 on ubuntu-24.04-riscv
+    runs-on: ubuntu-24.04-riscv
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          persist-credentials: false
+      # cibuildwheel is installed into a venv to avoid the externally-managed
+      # (PEP 668) system Python on Ubuntu 24.04. Pinned to 4.1.0 to match the
+      # pypa/cibuildwheel action SHA used by the other build jobs.
+      - name: Build wheels
+        run: |
+          python3 -m venv .cibw
+          .cibw/bin/pip install cibuildwheel==4.1.0
+          .cibw/bin/cibuildwheel --output-dir wheelhouse
+        env:
+          CIBW_ARCHS: riscv64
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: cibw-wheels-ubuntu-24.04-riscv-riscv64
+          path: ./wheelhouse/*.whl
+
   make_sdist:
     name: Build sdist
     runs-on: ubuntu-latest
@@ -104,7 +138,7 @@ jobs:
 
   publish:
     name: Publish to PyPI
-    needs: [build_wheels, make_sdist, create_release]
+    needs: [build_wheels, build_wheels_riscv64, make_sdist, create_release]
     if: github.event_name == 'push' && needs.create_release.outputs.created == 'true'
     runs-on: ubuntu-latest
     permissions:
