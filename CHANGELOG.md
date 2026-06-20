@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-06-20
+
 ### Added
 - Pre-built binary wheels on PyPI for CPython 3.8–3.14 across Linux
   (manylinux + musllinux; x86_64 and aarch64), Windows (AMD64 and ARM64), and
@@ -59,7 +61,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - First release: `reserve()` and `capacity()`.
 
-[Unreleased]: https://github.com/ChanTsune/list-reserve/compare/0.3.2...HEAD
+[Unreleased]: https://github.com/ChanTsune/list-reserve/compare/0.4.0...HEAD
+[0.4.0]: https://github.com/ChanTsune/list-reserve/compare/0.3.2...0.4.0
 [0.3.2]: https://github.com/ChanTsune/list-reserve/compare/0.3.1...0.3.2
 [0.3.1]: https://github.com/ChanTsune/list-reserve/compare/0.3.0...0.3.1
 [0.3.0]: https://github.com/ChanTsune/list-reserve/compare/0.2.0...0.3.0
