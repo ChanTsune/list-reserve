@@ -75,14 +75,15 @@ select = ["E", "F", "I", "B", "UP", "RUF"]
 # (cp3??t-*) and any future minor are excluded by not matching this list.
 build = "cp310-* cp311-* cp312-* cp313-* cp314-*"
 
-# Defense in depth:
-# - pp*: never build PyPy (this extension casts PyObject* to PyListObject*
-#   and reads internal ob_item/allocated fields; CPython-only).
-# - *t-*: never build free-threaded wheels. For CPython 3.14+ the free-threaded
-#   variant (cp314t) is built by default with no enable flag, so this skip is
-#   load-bearing; the nogil/per-object-lock build is untested against these
-#   internals.
-skip = "pp* *t-*"
+# Never build free-threaded wheels. For CPython 3.14+ the free-threaded variant
+# (cp314t) is built by default with no enable flag, so this skip is load-bearing;
+# the nogil/per-object-lock build is untested against these internals.
+#
+# PyPy needs no skip here: cibuildwheel v4 builds PyPy only when explicitly
+# enabled, and it isn't, so a `pp*` selector would be a no-op that cibuildwheel
+# warns about. PyPy is already excluded by not matching the CPython-only `build`
+# list above (this extension reads internal ob_item/allocated fields).
+skip = "*t-*"
 
 # cibuildwheel runs this against each installed wheel from a temp dir, so it
 # tests the installed .so. `-s {project}` makes {project} the discovery
