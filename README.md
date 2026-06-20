@@ -62,6 +62,18 @@ l = [1, 2, 3]
 print(allocated_bytes(l)) # capacity(l) * pointer size
 ```
 
+### remaining_capacity
+
+Return the number of additional items a list can accept before it needs to
+expand.
+
+```py
+from list_reserve import capacity, remaining_capacity
+
+l = [1, 2, 3]
+print(remaining_capacity(l)) # capacity(l) - len(l)
+```
+
 ### shrink_to_fit
 
 *since 0.1.0*  

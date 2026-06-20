@@ -6,6 +6,9 @@ def reserve(list: list[Any], capacity: int) -> None:
 def capacity(list: list[Any]) -> int:
     """Return list capacity."""
 
+def remaining_capacity(list: list[Any]) -> int:
+    """Return list remaining capacity."""
+
 def allocated_bytes(list: list[Any]) -> int:
     """Return list allocated memory size."""
 
