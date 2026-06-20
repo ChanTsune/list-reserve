@@ -1,0 +1,11 @@
+rules:
+  unpinned-uses:
+    config:
+      policies:
+        "*": hash-pin
+  # This project still uses PyPI username/password secrets; migration to Trusted
+  # Publishing should be handled separately from enabling workflow scanning.
+  use-trusted-publishing:
+    ignore:
+      - wheels.yml
+      - pypi-auth-check.yml

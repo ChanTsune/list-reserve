@@ -1,0 +1,91 @@
+name: actions-lint
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/**"
+      - ".github/actions/**"
+      - ".github/actionlint.yaml"
+      - ".github/zizmor.yml"
+      - ".github/dependabot.yml"
+  push:
+    paths:
+      - ".github/workflows/**"
+      - ".github/actions/**"
+      - ".github/actionlint.yaml"
+      - ".github/zizmor.yml"
+      - ".github/dependabot.yml"
+  schedule:
+    - cron: "15 13 * * 0"
+
+permissions: {}
+
+concurrency:
+  group: actions-lint-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+jobs:
+  actionlint:
+    name: Run actionlint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 60
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+      - name: Collect workflow files
+        id: files
+        run: |
+          files=$(find .github/workflows -maxdepth 1 -name '*.yml' | sort | tr '\n' ' ')
+          if [ -z "$files" ]; then
+            echo "::error::No workflow files found to lint"
+            exit 1
+          fi
+          echo "targets=$files" >> "$GITHUB_OUTPUT"
+      - name: Run actionlint
+        uses: reviewdog/action-actionlint@6fb7acc99f4a1008869fa8a0f09cfca740837d9d # v1.72.0
+        with:
+          fail_level: error
+          filter_mode: nofilter
+          reporter: local
+          actionlint_flags: ${{ steps.files.outputs.targets }}
+
+  zizmor:
+    name: Run zizmor
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 60
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+      - name: Run zizmor
+        uses: zizmorcore/zizmor-action@5f14fd08f7cf1cb1609c1e344975f152c7ee938d # v0.5.6
+        with:
+          advanced-security: false
+          persona: pedantic
+
+  zizmor-code-scanning:
+    name: Upload zizmor code scanning results
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write # upload SARIF results to GitHub code scanning
+    timeout-minutes: 60
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+      - name: Run zizmor for code scanning
+        uses: zizmorcore/zizmor-action@5f14fd08f7cf1cb1609c1e344975f152c7ee938d # v0.5.6
+        with:
+          advanced-security: true
+          persona: pedantic
