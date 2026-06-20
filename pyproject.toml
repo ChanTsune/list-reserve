@@ -10,9 +10,9 @@ requires = ["setuptools>=65.4.1", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.cibuildwheel]
-# CPython only, 3.8 through 3.14. PyPy (pp*), GraalPy (gp*), free-threaded
+# CPython only, 3.10 through 3.14. PyPy (pp*), GraalPy (gp*), free-threaded
 # (cp3??t-*) and any future minor are excluded by not matching this list.
-build = "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-* cp314-*"
+build = "cp310-* cp311-* cp312-* cp313-* cp314-*"
 
 # Defense in depth:
 # - pp*: never build PyPy (this extension casts PyObject* to PyListObject*
@@ -21,10 +21,7 @@ build = "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-* cp314-*"
 #   variant (cp314t) is built by default with no enable flag, so this skip is
 #   load-bearing; the nogil/per-object-lock build is untested against these
 #   internals.
-# - cp38 arm64/ARM64 skips: no cp38 installer exists for Apple Silicon or
-#   Windows ARM64, so those are skipped. cp38 Linux aarch64 IS still built --
-#   the aarch64 platform tag is not matched by the *_arm64 selectors.
-skip = "pp* *t-* cp38-macosx_arm64 cp38-macosx_universal2 cp38-*_arm64 cp38-win_arm64"
+skip = "pp* *t-*"
 
 # Run the repo-root unittest suite against each freshly installed wheel.
 # cibuildwheel runs this from a temp dir with the wheel installed, so
