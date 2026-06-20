@@ -30,4 +30,4 @@ class ShrinkToFitTest(TestCase):
         from list_reserve import shrink_to_fit
 
         with self.assertRaises(TypeError):
-            shrink_to_fit(1)
+            shrink_to_fit(1)  # type: ignore[arg-type]

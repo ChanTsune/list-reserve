@@ -12,4 +12,4 @@ class CapacityTest(TestCase):
         from list_reserve import capacity
 
         with self.assertRaises(TypeError):
-            capacity(1)
+            capacity(1)  # type: ignore[arg-type]

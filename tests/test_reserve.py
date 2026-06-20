@@ -33,7 +33,7 @@ class ReserveTest(TestCase):
         from list_reserve import reserve
 
         with self.assertRaises(TypeError):
-            reserve(1, 100)
+            reserve(1, 100)  # type: ignore[arg-type]
 
 
 class CapacityInvariantRegressionTest(TestCase):
