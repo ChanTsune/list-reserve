@@ -15,7 +15,7 @@ pip install list_reserve
 
 ### capacity
 
-Return allocated list memory size.
+Return the number of item slots currently allocated for a list.
 
 ```py
 from list_reserve import capacity
@@ -26,7 +26,7 @@ print(capacity(l)) # 3
 
 ### reserve
 
-Reserve list memory.
+Reserve list capacity.
 
 ```py
 from list_reserve import reserve, capacity
@@ -37,6 +37,17 @@ reserve(l, 10)
 print(len(l)) # 0
 
 print(capacity(l)) # 10
+```
+
+### allocated_bytes
+
+Return the memory size currently allocated for list item slots.
+
+```py
+from list_reserve import allocated_bytes
+
+l = [1, 2, 3]
+print(allocated_bytes(l)) # capacity(l) * pointer size
 ```
 
 ### shrink_to_fit

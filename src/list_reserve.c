@@ -12,7 +12,12 @@ list_realloc(PyListObject *self, Py_ssize_t newsize) {
         return 0;
     }
 
-    num_allocated_bytes = newsize * sizeof(PyObject *);
+    if (newsize > PY_SSIZE_T_MAX / (Py_ssize_t)sizeof(PyObject *)) {
+        PyErr_NoMemory();
+        return -1;
+    }
+
+    num_allocated_bytes = (size_t)newsize * sizeof(PyObject *);
     items = (PyObject **)PyMem_Realloc(self->ob_item, num_allocated_bytes);
     if (items == NULL) {
         PyErr_NoMemory();
@@ -106,7 +111,7 @@ list_allocated_bytes(PyObject *self, PyObject *args) {
         return NULL;
     }
     PyListObject *list = (PyListObject *)o;
-    Py_ssize_t allocated_bytes = list->allocated * sizeof(PyListObject *);
+    Py_ssize_t allocated_bytes = list->allocated * sizeof(PyObject *);
     PyObject *capacity = PyLong_FromSsize_t(allocated_bytes);
     if (capacity == NULL) {
         return NULL;

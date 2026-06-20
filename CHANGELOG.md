@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Python 3.8 and 3.9 support (end of life).
 
+### Fixed
+- `reserve()` raises `MemoryError` when the requested capacity is too large
+  to allocate.
+
 ## [0.4.0] - 2026-06-20
 
 ### Added
