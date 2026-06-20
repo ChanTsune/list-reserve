@@ -90,7 +90,7 @@ jobs:
       # matches the regexp; otherwise it is a no-op and 'created' is 'false'.
       - name: Create GitHub Release on "Release X.Y.Z" commit
         id: create_release
-        uses: ChanTsune/release-with-commit@b69c964230156ed249f2d503dbe0db5ee36529b9 # v3.0.0
+        uses: ChanTsune/release-with-commit@5a427bc9fbc54bf678e4c0bf36f4914d138d6b15 # v4.0.0
         with:
           regexp: "Release (\\d+([.]\\d+)*)\n*((\\s|\\S)+)"
           regexp_options: "us"
