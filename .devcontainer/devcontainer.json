@@ -15,7 +15,7 @@
         "ms-vscode.cpptools"
       ],
       "settings": {
-        // Discover the root-level test.py from the Test Explorer.
+        // Discover the tests/ package from the Test Explorer.
         "python.testing.unittestEnabled": true,
         "python.testing.unittestArgs": ["-v", "-s", ".", "-p", "test*.py"]
       }
