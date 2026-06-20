@@ -7,8 +7,8 @@ on:
     branches: [master]
   workflow_dispatch:
 
-# Build jobs only read the repo; the publish job elevates to contents: write at
-# the job level to create the GitHub Release. PyPI auth is via TWINE secrets.
+# Build and PyPI publish jobs only read the repo; the release job elevates to
+# contents: write at the job level to create the GitHub Release.
 permissions:
   contents: read
 
@@ -33,17 +33,15 @@ jobs:
           - { os: windows-latest,   archs: AMD64 }
           # Windows ARM64 (native build on windows-11-arm; tests skipped via
           # test-skip — experimental target, cannot run on the build host).
-          # cibuildwheel builds cp39-cp314 win_arm64; no win_arm64 interpreter
-          # exists below 3.9, and cp38-win_arm64 is excluded by skip.
+          # cibuildwheel builds cp310-cp314 win_arm64 here.
           - { os: windows-11-arm,   archs: ARM64 }
           # macOS Intel — macos-13 is decommissioned, use macos-15-intel
           - { os: macos-15-intel,   archs: x86_64 }
           - { os: macos-14,         archs: arm64 }
     steps:
       - uses: actions/checkout@v7
-      # Pin to v3.4.1: cibuildwheel v4.0.0 drops CPython 3.8. Do NOT accept a
-      # major bump (e.g. a Dependabot v4 PR) without first dropping the cp38
-      # target, or cp38 wheels stop building.
+      # Keep cibuildwheel pinned so wheel build behavior only changes after an
+      # explicit release-notes review.
       - name: Build wheels
         uses: pypa/cibuildwheel@v3.4.1
         env:
@@ -65,8 +63,8 @@ jobs:
           name: cibw-sdist
           path: dist/*.tar.gz
 
-  publish:
-    name: Release & publish to PyPI
+  create_release:
+    name: Create GitHub Release
     needs: [build_wheels, make_sdist]
     # Only on push to master (never on PR / workflow_dispatch). The
     # release-with-commit step below is itself a no-op unless the head commit
@@ -74,12 +72,12 @@ jobs:
     # publish nothing.
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
-    # NO PAT REQUIRED. Release creation AND PyPI upload happen in THIS same run,
-    # so there is no cross-workflow release:published cascade — the default
-    # GITHUB_TOKEN (which does not start new workflow runs) is sufficient.
     # contents: write is needed for release-with-commit to create the Release.
     permissions:
       contents: write
+    outputs:
+      created: ${{ steps.create_release.outputs.created }}
+      tag_name: ${{ steps.create_release.outputs.tag_name }}
     steps:
       - uses: actions/checkout@v7
       # Creates the GitHub Release + tag only when the head commit message
@@ -97,23 +95,30 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish:
+    name: Publish to PyPI
+    needs: [build_wheels, make_sdist, create_release]
+    if: github.event_name == 'push' && needs.create_release.outputs.created == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
       - name: Download all wheels + sdist
-        if: ${{ steps.create_release.outputs.created == 'true' }}
         uses: actions/download-artifact@v4
         with:
           path: dist
           pattern: cibw-*
           merge-multiple: true
       - name: Set up Python
-        if: ${{ steps.create_release.outputs.created == 'true' }}
         uses: actions/setup-python@v6
         with:
           python-version: '3.x'
       - name: Publish to PyPI
-        if: ${{ steps.create_release.outputs.created == 'true' }}
         env:
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: |
           python -m pip install --upgrade twine
+          twine check dist/*
           twine upload --non-interactive dist/*
