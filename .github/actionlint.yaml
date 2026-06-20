@@ -1,0 +1,6 @@
+# ubuntu-24.04-riscv is a custom runner label provided by the RISE RISC-V
+# Runners GitHub App (native riscv64 runners), not a GitHub-hosted label, so
+# actionlint must be told about it to avoid a false "unknown label" error.
+self-hosted-runner:
+  labels:
+    - ubuntu-24.04-riscv

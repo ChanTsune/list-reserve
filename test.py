@@ -20,15 +20,15 @@ class ListReserveTest(TestCase):
 
         lst = [1, 2, 3]
         cases = [
-            ([], 100, 100),  # (list, reserve, expected)
+            ([], 100, 100),  # (list, reserve, excepted)
             ([], 0, 0),
             ([], -1, 0),
             (lst, 1, capacity(lst)),
             (lst, -10, capacity(lst)),
         ]
-        for lst, size, expected in cases:
+        for lst, size, excepted in cases:
             reserve(lst, size)
-            self.assertEqual(capacity(lst), expected)
+            self.assertEqual(capacity(lst), excepted)
 
     def test_reserve_error(self):
         from list_reserve import reserve

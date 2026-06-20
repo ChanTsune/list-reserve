@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Pre-built binary wheels on PyPI for Linux riscv64 (manylinux + musllinux).
+
 ### Removed
 - Python 3.8 and 3.9 support (end of life).
 
