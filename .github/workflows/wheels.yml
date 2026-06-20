@@ -106,7 +106,7 @@ jobs:
     needs: [build_wheels, make_sdist]
     # Only on push to master (never on PR / workflow_dispatch). The
     # release-with-commit step below is itself a no-op unless the head commit
-    # message matches "Release X.Y.Z", so ordinary master pushes build wheels but
+    # message matches ":bookmark: Release X.Y.Z", so ordinary master pushes build wheels but
     # publish nothing.
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
@@ -122,11 +122,11 @@ jobs:
           persist-credentials: false
       # Creates the GitHub Release + tag only when the head commit message
       # matches the regexp; otherwise it is a no-op and 'created' is 'false'.
-      - name: Create GitHub Release on "Release X.Y.Z" commit
+      - name: 'Create GitHub Release on ":bookmark: Release X.Y.Z" commit'
         id: create_release
         uses: ChanTsune/release-with-commit@5a427bc9fbc54bf678e4c0bf36f4914d138d6b15 # v4.0.0
         with:
-          regexp: "Release (\\d+([.]\\d+)*)\n*((\\s|\\S)+)"
+          regexp: "^:bookmark: Release (\\d+([.]\\d+)*)\n*((\\s|\\S)*)"
           regexp_options: "us"
           release_name: "version $1"
           tag_name: "$1"
