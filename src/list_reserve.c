@@ -66,7 +66,7 @@ list_reserve(PyObject *self, PyObject *args) {
         return NULL;
     }
     if (!PyList_Check(o)) {
-        PyErr_SetString(PyExc_TypeError, "'reserve' excepted list object.");
+        PyErr_SetString(PyExc_TypeError, "'reserve' expected list object.");
         return NULL;
     }
     PyListObject *list = (PyListObject *)o;
@@ -102,7 +102,7 @@ list_allocated_bytes(PyObject *self, PyObject *args) {
         return NULL;
     }
     if (!PyList_Check(o)) {
-        PyErr_SetString(PyExc_TypeError, "'capacity_byte' expected list object.");
+        PyErr_SetString(PyExc_TypeError, "'allocated_bytes' expected list object.");
         return NULL;
     }
     PyListObject *list = (PyListObject *)o;
