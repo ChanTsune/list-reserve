@@ -79,6 +79,21 @@ shrink_to_fit(l)
 print(capacity(l)) # 100
 ```
 
+### stats
+
+Return list memory statistics in one call.
+
+```py
+from list_reserve import reserve, stats
+
+l = []
+reserve(l, 10)
+
+print(stats(l))
+# {'length': 0, 'capacity': 10, 'allocated_bytes': 80,
+#  'overhead': 10, 'utilization': 0.0}
+```
+
 ## Development
 
 This repository ships a [Dev Container](https://containers.dev). Open it in an editor that

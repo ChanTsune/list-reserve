@@ -119,12 +119,67 @@ list_allocated_bytes(PyObject *self, PyObject *args) {
     return capacity;
 }
 
+static PyObject *
+list_stats(PyObject *self, PyObject *args) {
+    PyObject *o;
+    if (!PyArg_ParseTuple(args, "O", &o)) {
+        return NULL;
+    }
+    if (!PyList_Check(o)) {
+        PyErr_SetString(PyExc_TypeError, "'stats' expected list object.");
+        return NULL;
+    }
+    PyListObject *list = (PyListObject *)o;
+    Py_ssize_t length = PyList_GET_SIZE(list);
+    Py_ssize_t allocated = list->allocated;
+    Py_ssize_t allocated_bytes = allocated * sizeof(PyObject *);
+    Py_ssize_t overhead = allocated - length;
+    // capacity == 0 would divide by zero; report 0.0 utilization instead.
+    double utilization = allocated == 0 ? 0.0 : (double)length / (double)allocated;
+
+    PyObject *dict = PyDict_New();
+    if (dict == NULL) {
+        return NULL;
+    }
+
+    PyObject *values[5] = {
+        PyLong_FromSsize_t(length),          PyLong_FromSsize_t(allocated),
+        PyLong_FromSsize_t(allocated_bytes), PyLong_FromSsize_t(overhead),
+        PyFloat_FromDouble(utilization),
+    };
+    const char *keys[5] = {
+        "length", "capacity", "allocated_bytes", "overhead", "utilization",
+    };
+    for (int i = 0; i < 5; i++) {
+        if (values[i] == NULL) {
+            for (int j = 0; j < 5; j++) {
+                Py_XDECREF(values[j]);
+            }
+            Py_DECREF(dict);
+            return NULL;
+        }
+    }
+    for (int i = 0; i < 5; i++) {
+        if (PyDict_SetItemString(dict, keys[i], values[i]) < 0) {
+            for (int j = i; j < 5; j++) {
+                Py_DECREF(values[j]);
+            }
+            Py_DECREF(dict);
+            return NULL;
+        }
+        // SetItemString INCREFs the stored value; release our own reference.
+        Py_DECREF(values[i]);
+    }
+    return dict;
+}
+
 static PyMethodDef methods[] = {
     {"reserve", list_reserve, METH_VARARGS, "Reserve list capacity."},
     {"capacity", list_capacity, METH_VARARGS, "Return list capacity."},
     {"allocated_bytes", list_allocated_bytes, METH_VARARGS,
      "Return list allocated memory size."},
     {"shrink_to_fit", list_shrink_to_fit, METH_VARARGS, "Shrink to fit list capacity."},
+    {"stats", list_stats, METH_VARARGS, "Return list memory statistics as a dict."},
     {NULL}};
 
 // module definition struct
