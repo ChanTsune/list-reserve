@@ -2,10 +2,22 @@
 
 Python builtin list memory allocation library.  
 
-[![PyPI - License](https://img.shields.io/pypi/l/list_reserve)](https://pypi.org/project/list-reserve/)
-![Test](https://github.com/ChanTsune/list-reserve/workflows/Test/badge.svg)
-[![PyPI](https://img.shields.io/pypi/v/list_reserve)](https://pypi.org/project/list-reserve/)
-[![Downloads](https://pepy.tech/badge/list-reserve)](https://pepy.tech/project/list-reserve)
+[![PyPI version](https://img.shields.io/pypi/v/list-reserve.svg)](https://pypi.org/project/list-reserve/)
+[![Python versions](https://img.shields.io/pypi/pyversions/list-reserve.svg)](https://pypi.org/project/list-reserve/)
+[![Wheel](https://img.shields.io/pypi/wheel/list-reserve.svg)](https://pypi.org/project/list-reserve/)
+[![Downloads](https://static.pepy.tech/badge/list-reserve)](https://pepy.tech/project/list-reserve)
+[![License](https://img.shields.io/pypi/l/list-reserve.svg)](https://github.com/ChanTsune/list-reserve/blob/master/LICENSE)
+[![Test](https://github.com/ChanTsune/list-reserve/workflows/Test/badge.svg)](https://github.com/ChanTsune/list-reserve/actions)
+
+## Why?
+
+Python lists over-allocate internally to make repeated append operations efficient.
+`list-reserve` exposes a small set of CPython-specific helpers for inspecting and
+controlling that capacity.
+
+## Platform support
+
+Prebuilt wheels are provided for CPython on Linux, macOS, and Windows.
 
 ## Getting it
 
