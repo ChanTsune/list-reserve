@@ -1,0 +1,69 @@
+name: lint
+
+on:
+  push:
+    paths:
+      - "**.py"
+      - "**.pyi"
+      - "src/**"
+      - "pyproject.toml"
+      - ".clang-format"
+      - ".github/workflows/lint.yml"
+  # No path filter on pull_request: linting is cheap and an unconditional run
+  # (matching test.yml) avoids a path-filtered job hanging a required status
+  # check under branch protection. The push trigger keeps its filter.
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: lint-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+jobs:
+  ruff:
+    name: Ruff
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
+        with:
+          python-version: "3.x"
+      # Pin Ruff so lint/format rules only change after an explicit version bump.
+      - name: Install Ruff
+        run: pip install ruff==0.15.18
+      - name: Ruff format check
+        run: ruff format --check .
+      - name: Ruff lint
+        run: ruff check .
+
+  clang-format:
+    name: clang-format
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
+        with:
+          python-version: "3.x"
+      # Pin clang-format (matches the LLVM release) for reproducible formatting.
+      - name: Install clang-format
+        run: pip install clang-format==22.1.5
+      - name: clang-format check
+        run: clang-format --dry-run --Werror src/list_reserve.c
