@@ -101,6 +101,25 @@ list_capacity(PyObject *self, PyObject *args) {
 }
 
 static PyObject *
+list_remaining_capacity(PyObject *self, PyObject *args) {
+    PyObject *o;
+    if (!PyArg_ParseTuple(args, "O", &o)) {
+        return NULL;
+    }
+    if (!PyList_Check(o)) {
+        PyErr_SetString(PyExc_TypeError, "'remaining_capacity' expected list object.");
+        return NULL;
+    }
+    PyListObject *list = (PyListObject *)o;
+    Py_ssize_t remaining = list->allocated - PyList_GET_SIZE(list);
+    PyObject *remaining_capacity = PyLong_FromSsize_t(remaining);
+    if (remaining_capacity == NULL) {
+        return NULL;
+    }
+    return remaining_capacity;
+}
+
+static PyObject *
 list_allocated_bytes(PyObject *self, PyObject *args) {
     PyObject *o;
     if (!PyArg_ParseTuple(args, "O", &o)) {
@@ -176,6 +195,8 @@ list_stats(PyObject *self, PyObject *args) {
 static PyMethodDef methods[] = {
     {"reserve", list_reserve, METH_VARARGS, "Reserve list capacity."},
     {"capacity", list_capacity, METH_VARARGS, "Return list capacity."},
+    {"remaining_capacity", list_remaining_capacity, METH_VARARGS,
+     "Return list remaining capacity."},
     {"allocated_bytes", list_allocated_bytes, METH_VARARGS,
      "Return list allocated memory size."},
     {"shrink_to_fit", list_shrink_to_fit, METH_VARARGS, "Shrink to fit list capacity."},
