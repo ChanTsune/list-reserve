@@ -11,3 +11,6 @@ def allocated_bytes(list: list[Any]) -> int:
 
 def shrink_to_fit(list: list[Any]) -> None:
     """Shrink to fit list capacity."""
+
+def stats(list: list[Any]) -> dict[str, Any]:
+    """Return list memory statistics as a dict."""
