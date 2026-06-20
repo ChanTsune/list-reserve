@@ -1,0 +1,5 @@
+# Ship the test suite in the sdist so the extension can be built and tested
+# from a PyPI source download. The C source under src/ and the stub package are
+# already included by setuptools (ext_modules / package_data).
+include test.py
+include LICENSE

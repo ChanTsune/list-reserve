@@ -1,0 +1,47 @@
+# Build configuration for the list_reserve CPython C extension.
+# setup.py remains the build script; this file declares PEP 517 build
+# requirements and the cibuildwheel configuration (single source of truth,
+# read identically by cibuildwheel locally and in CI).
+
+[build-system]
+# setuptools>=65.4.1 is cibuildwheel's documented floor for Windows ARM64 wheel
+# tagging; harmless on every other platform.
+requires = ["setuptools>=65.4.1", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.cibuildwheel]
+# CPython only, 3.8 through 3.14. PyPy (pp*), GraalPy (gp*), free-threaded
+# (cp3??t-*) and any future minor are excluded by not matching this list.
+build = "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-* cp314-*"
+
+# Defense in depth:
+# - pp*: never build PyPy (this extension casts PyObject* to PyListObject*
+#   and reads internal ob_item/allocated fields; CPython-only).
+# - *t-*: never build free-threaded wheels. For CPython 3.14+ the free-threaded
+#   variant (cp314t) is built by default with no enable flag, so this skip is
+#   load-bearing; the nogil/per-object-lock build is untested against these
+#   internals.
+# - cp38 arm64/ARM64 skips: no cp38 installer exists for Apple Silicon or
+#   Windows ARM64, so those are skipped. cp38 Linux aarch64 IS still built --
+#   the aarch64 platform tag is not matched by the *_arm64 selectors.
+skip = "pp* *t-* cp38-macosx_arm64 cp38-macosx_universal2 cp38-*_arm64 cp38-win_arm64"
+
+# Run the repo-root unittest suite against each freshly installed wheel.
+# cibuildwheel runs this from a temp dir with the wheel installed, so
+# `import list_reserve` binds to the installed .so. {project} only tells
+# unittest where to FIND test.py; cwd stays in the temp dir, so the
+# list_reserve/ stub directory at the repo root never shadows the installed
+# extension module. Do not rewrite as `cd {project} && ...` — that would put
+# the stub dir at the front of import resolution and shadow the .so.
+test-command = "python -m unittest discover -s {project} -p test.py"
+
+# Windows ARM64 is experimental and its tests cannot run on the build host, so
+# skip them (the wheel is still built and shipped).
+test-skip = "*-win_arm64"
+
+# Pin the manylinux/musllinux images for reproducibility; both families are
+# built per Linux arch automatically.
+manylinux-x86_64-image = "manylinux_2_28"
+manylinux-aarch64-image = "manylinux_2_28"
+musllinux-x86_64-image = "musllinux_1_2"
+musllinux-aarch64-image = "musllinux_1_2"
