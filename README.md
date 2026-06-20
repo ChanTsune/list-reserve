@@ -102,12 +102,12 @@ supports Dev Containers ("Reopen in Container"), or run it headlessly with the
 
 ```bash
 devcontainer up --workspace-folder .
-devcontainer exec --workspace-folder . python -m unittest
+devcontainer exec --workspace-folder . python tools/run_installed_tests.py
 ```
 
-The container compiles the C extension on creation, so the tests are runnable immediately.
-Since `list_reserve` is a C extension, re-run `pip install .` after editing
-`src/list_reserve.c`.
+The container installs the package in editable mode on creation, so the tests are
+runnable immediately. Since `list_reserve` includes a C extension, re-run
+`pip install -e .` after editing `src/list_reserve.c`.
 
 ## License
 
