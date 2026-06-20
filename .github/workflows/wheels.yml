@@ -106,7 +106,7 @@ jobs:
           merge-multiple: true
       - name: Set up Python
         if: ${{ steps.create_release.outputs.created == 'true' }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.x'
       - name: Publish to PyPI
