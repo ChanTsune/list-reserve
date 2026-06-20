@@ -40,7 +40,7 @@ jobs:
           - { os: macos-15-intel,   archs: x86_64 }
           - { os: macos-14,         archs: arm64 }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       # Pin to v3.4.1: cibuildwheel v4.0.0 drops CPython 3.8. Do NOT accept a
       # major bump (e.g. a Dependabot v4 PR) without first dropping the cp38
       # target, or cp38 wheels stop building.
@@ -57,7 +57,7 @@ jobs:
     name: Build sdist
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Build sdist
         run: pipx run build --sdist
       - uses: actions/upload-artifact@v4
@@ -81,7 +81,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       # Creates the GitHub Release + tag only when the head commit message
       # matches the regexp; otherwise it is a no-op and 'created' is 'false'.
       - name: Create GitHub Release on "Release X.Y.Z" commit
