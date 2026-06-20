@@ -1,13 +1,50 @@
 # Build configuration for the list_reserve CPython C extension.
-# setup.py remains the build script; this file declares PEP 517 build
-# requirements and the cibuildwheel configuration (single source of truth,
-# read identically by cibuildwheel locally and in CI).
+# Project metadata lives here (PEP 621 [project]); setup.py carries only the
+# Extension() definition. This file also declares the PEP 517 [build-system]
+# and the cibuildwheel config (single source of truth, read identically by
+# cibuildwheel locally and in CI).
 
 [build-system]
 # setuptools>=65.4.1 is cibuildwheel's documented floor for Windows ARM64 wheel
 # tagging; harmless on every other platform.
 requires = ["setuptools>=65.4.1", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "list_reserve"
+version = "0.4.0"
+description = "Python builtin list memory allocation library"
+readme = "README.md"
+# With Python 3.8/3.9 dropped (min 3.10), the SPDX `license = "MIT"` form
+# (PEP 639) is now viable, but it requires raising the build-system floor to
+# setuptools>=77. Kept as the table form to leave [build-system] untouched;
+# switch to SPDX when that floor is bumped.
+license = { text = "MIT" }
+authors = [{ name = "ChanTsune", email = "yshegou@gmail.com" }]
+keywords = ["list", "extension", "memory", "reserve", "capacity"]
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "License :: OSI Approved :: MIT License",
+]
+
+[project.urls]
+Homepage = "https://github.com/ChanTsune/list-reserve"
+
+# Explicit package list: with [project] present, setuptools enables automatic
+# discovery, which would trip over the src/ directory. Declare the stub package
+# directly.
+[tool.setuptools]
+packages = ["list_reserve"]
+
+[tool.setuptools.package-data]
+list_reserve = ["py.typed", "__init__.pyi"]
 
 [tool.cibuildwheel]
 # CPython only, 3.10 through 3.14. PyPy (pp*), GraalPy (gp*), free-threaded
