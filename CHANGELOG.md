@@ -11,8 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pre-built binary wheels on PyPI for Linux riscv64 (manylinux + musllinux).
 - `remaining_capacity()` — return the number of additional list items that can
   be added without expanding the list.
-- `stats()` — return list memory statistics (`length`, `capacity`,
-  `allocated_bytes`, `overhead`, `utilization`) as a dict in one call.
+- `stats()` — return list memory statistics as a dict in one call.
 
 ### Removed
 - Python 3.8 and 3.9 support (end of life).

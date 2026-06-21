@@ -19,7 +19,7 @@ class Stats(TypedDict):
     length: int
     capacity: int
     allocated_bytes: int
-    overhead: int
+    remaining_capacity: int
     utilization: float
 
 def stats(list: list[Any]) -> Stats:

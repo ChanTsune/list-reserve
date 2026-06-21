@@ -11,7 +11,7 @@ class StatsTest(TestCase):
         self.assertEqual(s["length"], 0)
         self.assertEqual(s["capacity"], 0)
         self.assertEqual(s["allocated_bytes"], 0)
-        self.assertEqual(s["overhead"], 0)
+        self.assertEqual(s["remaining_capacity"], 0)
         self.assertEqual(s["utilization"], 0.0)
 
     def test_stats_full(self):
@@ -24,7 +24,7 @@ class StatsTest(TestCase):
         self.assertEqual(s["length"], 3)
         self.assertEqual(s["capacity"], 3)
         self.assertEqual(s["allocated_bytes"], 3 * POINTER_SIZE)
-        self.assertEqual(s["overhead"], 0)
+        self.assertEqual(s["remaining_capacity"], 0)
         self.assertEqual(s["utilization"], 1.0)
 
     def test_stats_keys(self):
@@ -33,7 +33,13 @@ class StatsTest(TestCase):
         s = stats([])
         self.assertEqual(
             set(s.keys()),
-            {"length", "capacity", "allocated_bytes", "overhead", "utilization"},
+            {
+                "length",
+                "capacity",
+                "allocated_bytes",
+                "remaining_capacity",
+                "utilization",
+            },
         )
 
     def test_stats_value_types(self):
@@ -43,7 +49,7 @@ class StatsTest(TestCase):
         self.assertIsInstance(s["length"], int)
         self.assertIsInstance(s["capacity"], int)
         self.assertIsInstance(s["allocated_bytes"], int)
-        self.assertIsInstance(s["overhead"], int)
+        self.assertIsInstance(s["remaining_capacity"], int)
         self.assertIsInstance(s["utilization"], float)
 
     def test_stats_after_reserve(self):
@@ -54,10 +60,10 @@ class StatsTest(TestCase):
         s = stats(lst)
         self.assertEqual(s["length"], 0)
         self.assertEqual(s["capacity"], 100)
-        self.assertEqual(s["overhead"], 100)
+        self.assertEqual(s["remaining_capacity"], 100)
         self.assertEqual(s["utilization"], 0.0)
 
-    def test_stats_overhead_and_utilization(self):
+    def test_stats_remaining_capacity_and_utilization(self):
         from list_reserve import reserve, stats
 
         lst = [1, 2, 3, 4]
@@ -65,8 +71,8 @@ class StatsTest(TestCase):
         s = stats(lst)
         self.assertEqual(s["length"], 4)
         self.assertEqual(s["capacity"], 10)
-        self.assertEqual(s["overhead"], 6)
-        self.assertGreater(s["overhead"], 0)
+        self.assertEqual(s["remaining_capacity"], 6)
+        self.assertGreater(s["remaining_capacity"], 0)
         self.assertEqual(s["utilization"], 0.4)
         self.assertLess(s["utilization"], 1.0)
 
