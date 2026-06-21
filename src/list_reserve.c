@@ -152,7 +152,7 @@ list_stats(PyObject *self, PyObject *args) {
     Py_ssize_t length = PyList_GET_SIZE(list);
     Py_ssize_t allocated = list->allocated;
     Py_ssize_t allocated_bytes = allocated * sizeof(PyObject *);
-    Py_ssize_t overhead = allocated - length;
+    Py_ssize_t remaining = allocated - length;
     // capacity == 0 would divide by zero; report 0.0 utilization instead.
     double utilization = allocated == 0 ? 0.0 : (double)length / (double)allocated;
 
@@ -163,11 +163,11 @@ list_stats(PyObject *self, PyObject *args) {
 
     PyObject *values[5] = {
         PyLong_FromSsize_t(length),          PyLong_FromSsize_t(allocated),
-        PyLong_FromSsize_t(allocated_bytes), PyLong_FromSsize_t(overhead),
+        PyLong_FromSsize_t(allocated_bytes), PyLong_FromSsize_t(remaining),
         PyFloat_FromDouble(utilization),
     };
     const char *keys[5] = {
-        "length", "capacity", "allocated_bytes", "overhead", "utilization",
+        "length", "capacity", "allocated_bytes", "remaining_capacity", "utilization",
     };
     for (int i = 0; i < 5; i++) {
         if (values[i] == NULL) {
