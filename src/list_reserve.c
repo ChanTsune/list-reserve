@@ -192,15 +192,46 @@ list_stats(PyObject *self, PyObject *args) {
     return dict;
 }
 
+PyDoc_STRVAR(reserve_doc,
+             "Reserve list capacity.\n"
+             "\n"
+             "Grow the backing storage to hold at least capacity elements. Only\n"
+             "ever grows: a no-op when capacity already meets or exceeds the\n"
+             "request.");
+PyDoc_STRVAR(capacity_doc,
+             "Return list capacity.\n"
+             "\n"
+             "The number of elements the backing storage can hold before it\n"
+             "must grow; always greater than or equal to len(list).");
+PyDoc_STRVAR(remaining_capacity_doc,
+             "Return list remaining capacity.\n"
+             "\n"
+             "Equals capacity(list) - len(list): how many elements can be\n"
+             "appended before the backing storage must grow.");
+PyDoc_STRVAR(allocated_bytes_doc,
+             "Return list allocated memory size.\n"
+             "\n"
+             "The size in bytes of the backing item array (capacity times the\n"
+             "pointer size); excludes the list object header.");
+PyDoc_STRVAR(shrink_to_fit_doc,
+             "Shrink to fit list capacity.\n"
+             "\n"
+             "Reallocate the backing storage down to the live element count,\n"
+             "so that capacity(list) equals len(list) afterwards.");
+PyDoc_STRVAR(stats_doc,
+             "Return list memory statistics as a dict.\n"
+             "\n"
+             "Utilization is length / capacity (0.0 when capacity is 0); the\n"
+             "other keys match the same-named functions.");
+
 static PyMethodDef methods[] = {
-    {"reserve", list_reserve, METH_VARARGS, "Reserve list capacity."},
-    {"capacity", list_capacity, METH_VARARGS, "Return list capacity."},
+    {"reserve", list_reserve, METH_VARARGS, reserve_doc},
+    {"capacity", list_capacity, METH_VARARGS, capacity_doc},
     {"remaining_capacity", list_remaining_capacity, METH_VARARGS,
-     "Return list remaining capacity."},
-    {"allocated_bytes", list_allocated_bytes, METH_VARARGS,
-     "Return list allocated memory size."},
-    {"shrink_to_fit", list_shrink_to_fit, METH_VARARGS, "Shrink to fit list capacity."},
-    {"stats", list_stats, METH_VARARGS, "Return list memory statistics as a dict."},
+     remaining_capacity_doc},
+    {"allocated_bytes", list_allocated_bytes, METH_VARARGS, allocated_bytes_doc},
+    {"shrink_to_fit", list_shrink_to_fit, METH_VARARGS, shrink_to_fit_doc},
+    {"stats", list_stats, METH_VARARGS, stats_doc},
     {NULL}};
 
 // module definition struct
