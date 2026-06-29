@@ -64,6 +64,7 @@ print(allocated_bytes(l)) # capacity(l) * pointer size
 
 ### remaining_capacity
 
+*since 0.5.0*  
 Return the number of additional items a list can accept before it needs to
 expand.
 
@@ -93,6 +94,7 @@ print(capacity(l)) # 100
 
 ### stats
 
+*since 0.5.0*  
 Return list memory statistics in one call.
 
 ```py
