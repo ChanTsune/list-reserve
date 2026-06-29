@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-06-29
+
 ### Added
 - Pre-built binary wheels on PyPI for Linux riscv64 (manylinux + musllinux).
 - `remaining_capacity()` — return the number of additional list items that can
@@ -74,7 +76,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - First release: `reserve()` and `capacity()`.
 
-[Unreleased]: https://github.com/ChanTsune/list-reserve/compare/0.4.0...HEAD
+[Unreleased]: https://github.com/ChanTsune/list-reserve/compare/0.5.0...HEAD
+[0.5.0]: https://github.com/ChanTsune/list-reserve/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/ChanTsune/list-reserve/compare/0.3.2...0.4.0
 [0.3.2]: https://github.com/ChanTsune/list-reserve/compare/0.3.1...0.3.2
 [0.3.1]: https://github.com/ChanTsune/list-reserve/compare/0.3.0...0.3.1
