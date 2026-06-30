@@ -235,11 +235,11 @@ static PyMethodDef methods[] = {
     {NULL}};
 
 // module definition struct
-static struct PyModuleDef module = {PyModuleDef_HEAD_INIT, "list_reserve",
+static struct PyModuleDef module = {PyModuleDef_HEAD_INIT, "list_reserve._list_reserve",
                                     "list memory allocation library", -1, methods};
 
 // Initializes module
 PyMODINIT_FUNC
-PyInit_list_reserve(void) {
+PyInit__list_reserve(void) {
     return PyModule_Create(&module);
 }
