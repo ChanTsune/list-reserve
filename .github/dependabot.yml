@@ -6,3 +6,10 @@ updates:
       interval: "monthly"
     cooldown:
       default-days: 7
+    groups:
+      # codeql-action/init and codeql-action/analyze are separate dependencies to
+      # Dependabot, but CodeQL rejects a run whose init and analyze versions
+      # differ. Group them so both move in the same PR.
+      codeql-action:
+        patterns:
+          - "github/codeql-action*"
