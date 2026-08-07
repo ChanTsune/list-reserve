@@ -17,13 +17,12 @@
       "settings": {
         // Discover the tests/ package from the Test Explorer.
         "python.testing.unittestEnabled": true,
-        "python.testing.unittestArgs": ["-v", "-s", ".", "-p", "test*.py"]
+        "python.testing.unittestArgs": ["-v", "-s", "tests", "-p", "test*.py"]
       }
     }
   },
 
-  // Compile + install the extension (non-editable: a clean .so in site-packages
-  // avoids the name clash with the list_reserve/ stub package) and add the
-  // `build` frontend so `python -m build` works.
-  "postCreateCommand": "pip install --upgrade pip && pip install . build"
+  // Compile + install the package in editable mode and add the `build` frontend
+  // so `python -m build` works.
+  "postCreateCommand": "pip install --upgrade pip && pip install -e . build"
 }

@@ -2,4 +2,5 @@
 # from a PyPI source download. The tests/ package is not part of the wheel
 # (packages = ["list_reserve"]), so the sdist is its only distribution channel.
 recursive-include tests *.py
+include tools/run_installed_tests.py
 include LICENSE

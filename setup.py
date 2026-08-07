@@ -5,6 +5,6 @@ from setuptools import Extension, setup
 # [tool.setuptools.ext-modules] table cannot yet express stably.
 setup(
     ext_modules=[
-        Extension("list_reserve", ["src/list_reserve.c"]),
+        Extension("list_reserve._list_reserve", ["src/list_reserve.c"]),
     ],
 )
