@@ -124,7 +124,7 @@ jobs:
       # matches the regexp; otherwise it is a no-op and 'created' is 'false'.
       - name: 'Create GitHub Release on ":bookmark: Release X.Y.Z" commit'
         id: create_release
-        uses: ChanTsune/release-with-commit@5a427bc9fbc54bf678e4c0bf36f4914d138d6b15 # v4.0.0
+        uses: ChanTsune/release-with-commit@c828da3d1cf2238a59bf4bacebff89f6bc61b55a # v4.0.1
         with:
           regexp: "^:bookmark: Release (\\d+([.]\\d+)*)\n*((\\s|\\S)*)"
           regexp_options: "us"
